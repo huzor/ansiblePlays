@@ -1,19 +1,23 @@
 ---
-# This playbook installs indivdual pacakges on supported hosts
+# This playbook is used to install individual and recommended
+# packages on Ubuntu hosts. Add desired pkg items to empty pkg list.
 
-- hosts: h1
-  become: true
 
-  tasks:
-    - name: Install Dependencies
-      vars: 
-          pkg: [vim, nano, apache2]
- 
-      apt: 
-         name: "{{item}}"
-         update_cache: yes 
-         state: latest
+- hosts: # add host(s)
+  become: yes
+  vars:
+    pkg: []
+
+  tasks: 
+    - name: Install pkgs
+      apt:
+        name: "{{item}}"
+        update_cache: yes
+        state: latest
+        install_recommends: yes
       loop: "{{pkg}}"
+      when: ansible_os_family == "Debian"
+         
+      
 
 
-       

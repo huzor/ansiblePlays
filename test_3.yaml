@@ -1,5 +1,5 @@
 ---
-# This playbooks uses a where clause to skip steps on a particular hosts
+# This playbook provides an example on how to use a "When" conditional  
 
 - hosts: webservers
   become: True

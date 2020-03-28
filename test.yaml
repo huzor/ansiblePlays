@@ -1,6 +1,7 @@
 ---
+# This play ignores errors when install pkgs on hosts with different OS 
 
-- hosts: webservers
+- hosts: # add hosts
   become: True
   tasks:
     - name: install vsftpd on ubuntu

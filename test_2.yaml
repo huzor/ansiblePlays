@@ -1,4 +1,5 @@
 ---
+# This play uses shows to reference a variable in a command  
 
 - hosts: webservers
   become: True
