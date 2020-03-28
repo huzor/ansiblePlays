@@ -1,0 +1,21 @@
+---
+# This playbook is used to install individual packages on supported hosts
+
+- hosts: webservers
+  become: yes
+  vars:
+    pkg: [vim, nano, apache2]
+
+  tasks: 
+    - name: Install pkgs
+      apt:
+        name: "{{item}}"
+        update_cache: yes
+        state: latest
+        install_recommends: yes
+      loop: "{{pkg}}"
+      when: ansible_os_family == "Debian"
+         
+      
+
+

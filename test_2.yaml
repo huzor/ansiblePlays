@@ -1,0 +1,17 @@
+---
+
+- hosts: webservers
+  become: True
+  vars:
+    - var: "Dirty Diana"
+
+  tasks:
+    - name: echo stuff
+      command: echo -e "{{var}} -Micheal Jackson cretaed this song.\nWhat inspired to create is is unknown.\n{{var}} will live on forver"
+      register: results       
+
+
+    - name: show results
+      debug: msg={{results.stdout_lines}}
+
+  

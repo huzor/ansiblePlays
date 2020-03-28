@@ -1,0 +1,19 @@
+---
+# This playbook installs indivdual pacakges on supported hosts
+
+- hosts: h1
+  become: true
+
+  tasks:
+    - name: Install Dependencies
+      vars: 
+          pkg: [vim, nano, apache2]
+ 
+      apt: 
+         name: "{{item}}"
+         update_cache: yes 
+         state: latest
+      loop: "{{pkg}}"
+
+
+       

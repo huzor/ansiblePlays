@@ -1,0 +1,16 @@
+---
+# This playbooks uses a where clause to skip steps on a particular hosts
+
+- hosts: webservers
+  become: True
+
+  tasks:
+    - name: install apache2
+      apt: name=apache2 state=latest
+      when: ansible_pkg_mgr == "apt"
+      
+
+    - name: install httpd
+      yum: name=httpd state=latest
+      when: ansible_pkg_mgr == "yum"
+     
