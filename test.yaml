@@ -1,5 +1,6 @@
 ---
 # This play ignores errors when install pkgs on hosts with different OS 
+# Shown below is an example of a pkg (vsftpd) installed on an ubuntu hosts
 
 - hosts: # add hosts
   become: True
