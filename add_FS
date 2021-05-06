@@ -1,0 +1,53 @@
+---  # Setup for OPP FileSystem status with VG02 defined and added new disk. change sections about lvols and applies to all hosts RHEL
+- hosts: was
+  become: true
+  vars:
+    relver:
+      "6" : ext4
+      "7" : xfs
+
+    lvols:
+#      - { name:  usropnvnbuvol, size:   5g, path: "/usr/openv" }
+#      - { name:  forescoutvol, size:   500m, path: "/opt/forescout" }
+#      - { name:  scvol, size:   100%FREE, path: "/opt/sc" }
+#      - { name:  backupvol, size: 500g, path: "/backup" }
+#      - { name:  datavol, size: 100%FREE, path: "/data" }
+      - { name:  mqmanagevol, size: 5g, path: "/Mqmanage" }
+      - { name:  wasvol, size: 40g, path: "/opt/IBM/WebSphere" }
+      - { name:  varmqmvol, size: 15g, path: "/var/mqm" }
+      - { name:  varmqmlogvol, size: 15g, path: "/var/mqm/log" }
+      - { name:  optmqmvol, size: 5g, path: "/opt/mqm" }
+  tasks:
+
+    - name:  Add volgroup02
+      lvg:
+       vg: volgroup02
+       pvs: /dev/sdc
+
+    - name: create logical vols in volgroup02
+      lvol:
+        vg: volgroup02
+        lv: "{{ item.name }}"
+        size: "{{ item.size }}"
+      with_items: "{{ lvols }}"
+
+    - name: Create fs
+      filesystem:
+        fstype: "{{ relver[ansible_distribution_major_version] }}"
+        dev: "/dev/mapper/volgroup02-{{ item.name }}"
+      with_items: "{{ lvols }}"
+
+    - name: Create directories if not present
+      file:
+        path: "{{ item.path }}"
+        state: directory
+      with_items: "{{ lvols }}"
+
+    - name: Mount filesystems
+      mount:
+        path: "{{ item.path }}"
+        src: "/dev/mapper/volgroup02-{{ item.name }}"
+        fstype: "{{ relver[ansible_distribution_major_version] }}"
+        state: mounted
+      with_items: "{{ lvols }}"
+
